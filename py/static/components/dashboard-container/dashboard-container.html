@@ -2,14 +2,13 @@
     <button ng-click="$ctrl.getTimeSeries($index)">{{_data.long_name}}</button>
     <br>
 </div>
-<br>
-{{graphs[0]}}
-<br>
-<br>
-{{graphs[1]}}
+<dashboard-graph data="graphs[0]" id="0" ng-show="graphs[0]"></dashboard-graph>
 <br>
 <br>
-{{graphs[2]}}
+<dashboard-graph data="graphs[1]" id="1" ng-show="graphs[1]"></dashboard-graph>
 <br>
 <br>
-{{graphs[3]}}
+<dashboard-graph data="graphs[2]" id="2" ng-show="graphs[2]"></dashboard-graph>
+<br>
+<br>
+<dashboard-graph data="graphs[3]" id="3" ng-show="graphs[3]"></dashboard-graph>

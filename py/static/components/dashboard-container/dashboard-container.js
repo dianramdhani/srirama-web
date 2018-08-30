@@ -102,7 +102,7 @@ angular.module('srirama')
 
                 // Time di ambil dari time browser.
                 this.data.forEach((data, i) => {
-                    this.data[i].select = { ...data.select, ...{ time: ['1999-01', '1999-12'] } };
+                    this.data[i].select = { ...data.select, ...{ time: [`${(new Date()).getFullYear()}-01`, `${(new Date()).getFullYear()}-12`] } };
                 });
             }
 
@@ -167,7 +167,7 @@ angular.module('srirama')
                 )
                     .then((res) => {
                         this.scope.graphs.unshift(res);
-                        console.log('getTimeSeries', res);
+                        console.log('dashboardContainer getTimeSeries', res);
                     });
             }
 
