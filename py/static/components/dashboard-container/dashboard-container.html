@@ -1,14 +1,40 @@
-<div ng-repeat="_data in data">
-    <button ng-click="$ctrl.getTimeSeries($index)">{{_data.long_name}}</button>
-    <br>
+<style>
+    .w3-panel-dashboard {
+        padding: 0.01em 10px;
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
+    }
+</style>
+<div class="w3-container">
+    <div class="w3-row" style="height: 100%;">
+        <div class="w3-quarter w3-panel-dashboard">
+            <div class="w3-row w3-margin-bottom" style="height: 280px;">
+                <dashboard-map latlng="$ctrl.latlng"></dashboard-map>
+            </div>
+            <div class="w3-card-4 w3-row w3-margin-bottom">
+                <div class="w3-container w3-light-grey">
+                    <h3>Variable</h3>
+                </div>
+                <div class="w3-container" style="height: 550px; overflow-x: hidden; overflow-y: scroll;">
+                    <p ng-repeat="_data in data">
+                        <button class="w3-button w3-block" ng-click="$ctrl.getTimeSeries($index)">{{_data.long_name}}</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="w3-threequarter w3-panel-dashboard">
+            <div class="w3-row w3-margin-bottom" style="height: 225px;">
+                <dashboard-graph data="graphs[0]" id="0" ng-show="graphs[0]"></dashboard-graph>
+            </div>
+            <div class="w3-row w3-margin-bottom" style="height: 225px;">
+                <dashboard-graph data="graphs[1]" id="1" ng-show="graphs[1]"></dashboard-graph>
+            </div>
+            <div class="w3-row w3-margin-bottom" style="height: 225px;">
+                <dashboard-graph data="graphs[2]" id="2" ng-show="graphs[2]"></dashboard-graph>
+            </div>
+            <div class="w3-row w3-margin-bottom" style="height: 225px;">
+                <dashboard-graph data="graphs[3]" id="3" ng-show="graphs[3]"></dashboard-graph>
+            </div>
+        </div>
+    </div>
 </div>
-<dashboard-graph data="graphs[0]" id="0" ng-show="graphs[0]"></dashboard-graph>
-<br>
-<br>
-<dashboard-graph data="graphs[1]" id="1" ng-show="graphs[1]"></dashboard-graph>
-<br>
-<br>
-<dashboard-graph data="graphs[2]" id="2" ng-show="graphs[2]"></dashboard-graph>
-<br>
-<br>
-<dashboard-graph data="graphs[3]" id="3" ng-show="graphs[3]"></dashboard-graph>

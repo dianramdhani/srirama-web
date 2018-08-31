@@ -3,7 +3,7 @@ angular.module('srirama')
         constructor($http, $q) {
             this.http = $http;
             this.q = $q;
-            this.urlServer = 'http://localhost:4343';
+            this.urlServer = '';
         }
 
         /**

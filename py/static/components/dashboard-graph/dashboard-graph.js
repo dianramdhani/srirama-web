@@ -5,23 +5,33 @@ angular.module('srirama')
             data: '<',
             id: '='
         },
-        controller: ['$scope', class dashboardGraph {
-            constructor($scope) {
-                this.scope = $scope;
+        controller: [class dashboardGraph {
+            $onChanges(e) {
+                if (e.data) {
+                    if (this.data) {
+                        this.setGraph(this.data);
+                    }
+                }
             }
 
-            $onInit() {
-
-            }
-
+            /**
+             * Mengubah data time series menjadi grafik.
+             * @param {Object} data - Data time series.
+             */
             setGraph(data) {
                 let dataArr = [];
-                for (var i = 0; i < data.data.length; i++) {
+                for (let i = 0; i < data.data.length; i++) {
                     dataArr.push([(new Date(data.coords[data.dims[0]].data[i])).getTime(), data.data[i]]);    //.push(xArr, yArr)
                 }
-                Highcharts.stockChart(`dashboard-graph-${this.id}`, {
+                Highcharts.chart(`dashboard-graph-${this.id}`, {
+                    chart:{
+                        height: 220
+                    },
                     title: {
-                        text: data.attrs.long_name
+                        text: null,
+                        style: {
+                            display: 'none'
+                        }
                     },
                     xAxis: {
                         type: 'datetime',
@@ -32,7 +42,10 @@ angular.module('srirama')
                         }
                     },
                     yAxis: {
-                        opposite: false
+                        opposite: false,
+                        title: {
+                            text: `${data.attrs.long_name} (${data.attrs.units})`
+                        }
                     },
                     tooltip: {
                         formatter: function () {
@@ -41,18 +54,13 @@ angular.module('srirama')
                         }
                     },
                     series: [{
+                        showInLegend: false,
                         data: dataArr
-                    }]
-                });
-                console.log('dashboardGraph setGraph', data, this.id, dataArr);
-            }
-
-            $onChanges(e) {
-                if (e.data) {
-                    if (this.data) {
-                        this.setGraph(this.data);
+                    }],
+                    credits: {
+                        enabled: false
                     }
-                }
+                });
             }
         }]
     });
