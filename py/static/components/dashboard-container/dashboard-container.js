@@ -11,98 +11,118 @@ angular.module('srirama')
                     {
                         id: 0,
                         key: 'ts',
-                        select: {}
+                        select: {},
+                        info: 'ts adalah ...'
                     },
                     {
                         id: 0,
                         key: 'rhscrn',
-                        select: {}
+                        select: {},
+                        info: 'rhscrn adalah ...'
                     },
                     {
                         id: 0,
                         key: 'rnet',
-                        select: {}
+                        select: {},
+                        info: 'rnet adalah ...'
                     },
                     {
                         id: 0,
                         key: 'alb_ave',
-                        select: {}
+                        select: {},
+                        info: 'alb_ave adalah ...'
                     },
                     {
                         id: 0,
                         key: 'rnd24',
-                        select: {}
+                        select: {},
+                        info: 'rnd24 adalah ...'
                     },
                     {
                         id: 0,
                         key: 'd10',
-                        select: {}
+                        select: {},
+                        info: 'd10 adalah ...'
                     },
                     {
                         id: 0,
                         key: 'cld',
-                        select: {}
+                        select: {},
+                        info: 'cld adalah ...'
                     },
                     {
                         id: 0,
                         key: 'convh_ave',
-                        select: { lev: 200 }
+                        select: { lev: 200 },
+                        info: 'convh_ave adalah ...'
                     },
                     {
                         id: 0,
                         key: 'hfls',
-                        select: {}
+                        select: {},
+                        info: 'hfls adalah ...'
                     },
                     {
                         id: 0,
                         key: 'hfss',
-                        select: {}
+                        select: {},
+                        info: 'hfss adalah ...'
                     },
                     {
                         id: 0,
                         key: 'mrros',
-                        select: {}
+                        select: {},
+                        info: 'mrros adalah ...'
                     },
                     {
                         id: 0,
                         key: 'pmsl_ave',
-                        select: {}
+                        select: {},
+                        info: 'pmsl_ave adalah ...'
                     },
                     {
                         id: 0,
                         key: 'tsea',
-                        select: {}
+                        select: {},
+                        info: 'tsea adalah ...'
                     },
                     {
                         id: 0,
                         key: 'dustwd_ave',
-                        select: {}
+                        select: {},
+                        info: 'dustwd_ave adalah ...'
                     },
                     {
                         id: 0,
                         key: 'dustdd_ave',
-                        select: {}
+                        select: {},
+                        info: 'dustdd_ave adalah ...'
                     },
                     {
                         id: 0,
                         key: 'u200',
-                        select: {}
+                        select: {},
+                        info: 'u200 adalah ...'
                     },
                     {
                         id: 0,
                         key: 'u850',
-                        select: {}
+                        select: {},
+                        info: 'u850 adalah ...'
                     },
                     {
                         id: 0,
                         key: 'sfcwind',
-                        select: {}
+                        select: {},
+                        info: 'sfcwind adalah ...'
                     },
                 ];
+                this.active = [];
 
                 // Time di ambil dari time browser.
-                this.data.forEach((data, i) => {
-                    this.data[i].select = { ...data.select, ...{ time: [`${(new Date()).getFullYear()}-01`, `${(new Date()).getFullYear()}-12`] } };
+                this.data.forEach((data) => {
+                    data.select = { ...data.select, ...{ time: [`${(new Date()).getFullYear()}-01`, `${(new Date()).getFullYear()}-12`] } };
+                    data['active'] = false;
                 });
             }
 
@@ -114,6 +134,7 @@ angular.module('srirama')
                             .then(() => {
                                 this.scope.data = this.data;
                                 this.scope.graphs = [];
+                                this.scope.info = [];
 
                                 this.getTimeSeries(0)
                                     .then(() => {
@@ -154,11 +175,21 @@ angular.module('srirama')
             }
 
             /**
-             * Mengambil data time series aktual.
+             * Mengambil data time series aktual. Update active button di dataset.
              * @param {Number} i - Index dari this.data.
              * @returns {Promise}
              */
             getTimeSeries(i) {
+                this.data[i].active = true;
+                this.active.unshift(this.data[i]);
+                if (this.active[4]) {
+                    angular.forEach(this.data, (data) => {
+                        if (data === this.active[4]) {
+                            data.active = false;
+                        }
+                    });
+                }
+
                 return this.api.getDataPointTimeSeries(
                     this.data[i].select,
                     this.latlng,
@@ -167,7 +198,7 @@ angular.module('srirama')
                 )
                     .then((res) => {
                         this.scope.graphs.unshift(res);
-                        console.log('dashboardContainer getTimeSeries', res);
+                        this.setInfo(res, this.data[i].info);
                     });
             }
 
@@ -194,6 +225,15 @@ angular.module('srirama')
                     q.resolve(defaultLocation);
                 }
                 return q.promise;
+            }
+
+            /**
+             * Update array info.
+             * @param {Object} data - Data time series.
+             * @param {String} info - Keterangan singkat data.
+             */
+            setInfo(data, info) {
+                this.scope.info.unshift({ data, info });
             }
         }]
     });

@@ -13,27 +13,47 @@
             </div>
             <div class="w3-card-4 w3-row w3-margin-bottom">
                 <div class="w3-container w3-light-grey">
-                    <h3>Variable</h3>
+                    <h3>Dataset</h3>
                 </div>
                 <div class="w3-container" style="height: 550px; overflow-x: hidden; overflow-y: scroll;">
                     <p ng-repeat="_data in data">
-                        <button class="w3-button w3-block" ng-click="$ctrl.getTimeSeries($index)">{{_data.long_name}}</button>
+                        <button class="w3-button w3-block" ng-class="_data.active? 'w3-disabled': ''" ng-click="_data.active || $ctrl.getTimeSeries($index)">{{_data.long_name}}</button>
                     </p>
                 </div>
             </div>
         </div>
         <div class="w3-threequarter w3-panel-dashboard">
             <div class="w3-row w3-margin-bottom" style="height: 225px;">
-                <dashboard-graph data="graphs[0]" id="0" ng-show="graphs[0]"></dashboard-graph>
+                <div class="w3-third" style="height: 100%;">
+                    <dashboard-info info="info[0]" ng-show="info[0]"></dashboard-info>
+                </div>
+                <div class="w3-twothird w3-margin-bottom" style="height: 100%;">
+                    <dashboard-graph data="graphs[0]" id="0" ng-show="graphs[0]"></dashboard-graph>
+                </div>
             </div>
             <div class="w3-row w3-margin-bottom" style="height: 225px;">
-                <dashboard-graph data="graphs[1]" id="1" ng-show="graphs[1]"></dashboard-graph>
+                <div class="w3-third" style="height: 100%;">
+                    <dashboard-info info="info[1]" ng-show="info[1]"></dashboard-info>
+                </div>
+                <div class="w3-twothird w3-margin-bottom" style="height: 100%;">
+                    <dashboard-graph data="graphs[1]" id="1" ng-show="graphs[1]"></dashboard-graph>
+                </div>
             </div>
             <div class="w3-row w3-margin-bottom" style="height: 225px;">
-                <dashboard-graph data="graphs[2]" id="2" ng-show="graphs[2]"></dashboard-graph>
+                <div class="w3-third" style="height: 100%;">
+                    <dashboard-info info="info[2]" ng-show="info[2]"></dashboard-info>
+                </div>
+                <div class="w3-twothird w3-margin-bottom" style="height: 100%;">
+                    <dashboard-graph data="graphs[2]" id="2" ng-show="graphs[2]"></dashboard-graph>
+                </div>
             </div>
             <div class="w3-row w3-margin-bottom" style="height: 225px;">
-                <dashboard-graph data="graphs[3]" id="3" ng-show="graphs[3]"></dashboard-graph>
+                <div class="w3-third" style="height: 100%;">
+                    <dashboard-info info="info[3]" ng-show="info[3]"></dashboard-info>
+                </div>
+                <div class="w3-twothird w3-margin-bottom" style="height: 100%;">
+                    <dashboard-graph data="graphs[3]" id="3" ng-show="graphs[3]"></dashboard-graph>
+                </div>
             </div>
         </div>
     </div>

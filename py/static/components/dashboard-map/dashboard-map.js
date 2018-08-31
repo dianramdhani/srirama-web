@@ -6,20 +6,23 @@ angular.module('srirama')
         },
         controller: [class dashboardMap {
             $onInit() {
-                this.map = L.map('dashboard-map').setView([51.505, -0.09], 13);
+                this.latlng = {
+                    lat: -6.894,
+                    lng: 107.586
+                };
+                this.map = L.map('dashboard-map', { attributionControl: false, dragging: false, tap: false }).setView(this.latlng, 13);
+                this.map.on('zoomend', () => {
+                    this.map.setView(this.latlng);
+                });
 
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }).addTo(this.map);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
             }
 
             $onChanges(e) {
                 if (e.latlng) {
                     if (this.latlng) {
-                        this.map.setView(this.latlng);    
-                        L.marker(this.latlng).addTo(this.map)
-                            .bindPopup('Lokasi anda.')
-                            .openPopup();
+                        this.map.setView(this.latlng);
+                        L.marker(this.latlng).addTo(this.map);
                     }
                 }
             }
