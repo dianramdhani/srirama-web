@@ -23,9 +23,10 @@ angular.module('srirama')
                 for (let i = 0; i < data.data.length; i++) {
                     dataArr.push([(new Date(data.coords[data.dims[0]].data[i])).getTime(), data.data[i]]);    //.push(xArr, yArr)
                 }
-                Highcharts.chart(`dashboard-graph-${this.id}`, {
-                    chart:{
-                        height: 220
+                Highcharts.chart({
+                    chart: {
+                        renderTo: `dashboard-graph-${this.id}`,
+                        height: 225
                     },
                     title: {
                         text: null,
