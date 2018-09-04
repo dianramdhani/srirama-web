@@ -21,7 +21,7 @@ angular.module('srirama')
             $onChanges(e) {
                 if (e.latlng) {
                     if (this.latlng) {
-                        this.map.setView(this.latlng);
+                        this.map.setView(this.latlng, 8);
                         L.marker(this.latlng).addTo(this.map);
                     }
                 }

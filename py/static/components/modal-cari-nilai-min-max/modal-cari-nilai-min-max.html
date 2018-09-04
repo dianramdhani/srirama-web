@@ -1,0 +1,76 @@
+<div ng-show="$ctrl.modalCariNilaiMinMaxShow">
+    <div class="w3-modal" ng-style="style">
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+            <div class="w3-center">
+                <br>
+                <span class="w3-button w3-xlarge w3-hover-red w3-display-topright" title="Close Modal" ng-click="$ctrl.modalCariNilaiMinMaxShow = false">&times;</span>
+                <h3>Cari Nilai Terkecil dan Terbesar</h3>
+            </div>
+
+            <div class="w3-container">
+                <div class="w3-section">
+                    <h5 style="font-weight: bold;">Cari Nilai Terkecil</h5>
+
+                    <div class="w3-small" ng-repeat="dim in dims">
+                        <span ng-if="$index === 0">
+                            <label>
+                                <b>{{dim.key | uppercase}} 1</b>
+                            </label>
+                            <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="selectMin[dim.key][0]" ng-options="o for o in dim.values"
+                                required></select>
+                            <label>
+                                <b>{{dim.key | uppercase}} 2</b>
+                            </label>
+                            <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="selectMin[dim.key][1]" ng-options="o for o in dim.values"
+                                required></select>
+                        </span>
+                        <span ng-if="$index > 0">
+                            <label>
+                                <b>{{dim.key | uppercase}}</b>
+                            </label>
+                            <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="selectMin[dim.key]" ng-options="o for o in dim.values"
+                                required></select>
+                        </span>
+                    </div>
+                    <button class="w3-button w3-block w3-light-grey w3-section w3-padding w3-small" type="submit" ng-click="$ctrl.selectMinMax({ selected: selectMin }); $ctrl.modalCariNilaiMinMaxShow = false;">Pilih</button>
+
+                    <hr>
+
+                    <h5 style="font-weight: bold;">Cari Nilai Terbesar</h5>
+
+                    <div class="w3-small" ng-repeat="dim in dims">
+                        <span ng-if="$index === 0">
+                            <label>
+                                <b>{{dim.key | uppercase}} 1</b>
+                            </label>
+                            <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="selectMax[dim.key][0]" ng-options="o for o in dim.values"
+                                required></select>
+                            <label>
+                                <b>{{dim.key | uppercase}} 2</b>
+                            </label>
+                            <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="selectMax[dim.key][1]" ng-options="o for o in dim.values"
+                                required></select>
+                        </span>
+                        <span ng-if="$index > 0">
+                            <label>
+                                <b>{{dim.key | uppercase}}</b>
+                            </label>
+                            <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="selectMax[dim.key]" ng-options="o for o in dim.values"
+                                required></select>
+                        </span>
+                    </div>
+                    <button class="w3-button w3-block w3-light-grey w3-section w3-padding w3-small" type="submit" ng-click="$ctrl.selectMinMax({ selected: selectMax }); $ctrl.modalCariNilaiMinMaxShow = false;">Pilih</button>
+
+                    <hr>
+
+                    <p class="w3-small">
+                        Catatan!
+                        <br>
+                        <b>{{dims[0].key | uppercase}} 1</b> harus lebih kecil dari
+                        <b>{{dims[0].key | uppercase}} 2</b>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -8,7 +8,9 @@ angular.module('srirama')
 
         /**
          * Mengambil seluruh datasets yang telah diinisialisasi di server.
-         * @returns {Object}
+         * Digunakan di:
+         * dashboard-container
+         * @returns {Promise}
          */
         getDatasets() {
             var q = this.q.defer();
@@ -22,11 +24,13 @@ angular.module('srirama')
 
         /**
          * Mengambil data time series aktual.
+         * Digunakan di:
+         * dashboard-container
          * @param {Object} select - Query data yang dicari dengan atribut waktu dan dimensi lainnya jika ada (contoh level).
          * @param {Object} latlng - Titik yang mau di ambil dengan atribut lat dan lng.
          * @param {Number} id - Id dari dataset. Jika tidak diisi akan mengambil id dari parameter di URL.
          * @param {String} key - Kunci variabel yang datanya mau di ambil. Jika tidak diisi akan mengambil kunci dari parameter di URL.
-         * @returns {Object}
+         * @returns {Promise}
          */
         getDataPointTimeSeries(select, latlng, id = null, key = null) {
             if (id !== null && key !== null) {
@@ -42,13 +46,155 @@ angular.module('srirama')
                     'id': this.id,
                     'key': this.key,
                     'select': JSON.stringify(select),
-                    'lat': latlng.lat,
-                    'lon': latlng.lng
+                    'latlng': JSON.stringify(latlng),
                 }
             })
                 .then((res) => {
                     res = res.data;
                     q.resolve(res);
+                });
+            return q.promise;
+        }
+
+        // belum di test
+
+        /**
+         * Mengambil seluruh dimensi selain latitude dan longitude.
+         * Digunakan di:
+         * grafik-container
+         * @returns {Promise}
+         */
+        getDimsWoLatLon() {
+            const url = new URL(window.location.href);
+            this.id = url.searchParams.get('id');
+            this.key = url.searchParams.get('key');
+
+            var q = this.q.defer();
+            this.http({
+                url: `${this.urlServer}/api/getdimswolatlon`,
+                method: 'GET',
+                params: {
+                    id: this.id,
+                    key: this.key
+                }
+            })
+                .then((res) => {
+                    res = res.data;
+                    q.resolve(res);
+                });
+            return q.promise;
+        }
+
+        /**
+         * Mengambil header data spasial berupa bounding, legend, long_name, dan units.
+         * Digunakan di:
+         * map-container
+         * @param {Object} select - Query data yang dicari dengan atribut waktu dan dimensi lainnya jika ada (contoh level).
+         * @returns {Promise}
+         */
+        getLayerHeader(select) {
+            var q = this.q.defer();
+            this.http({
+                url: `${this.urlServer}/api/getlayerheader`,
+                method: 'GET',
+                params: {
+                    id: this.id,
+                    key: this.key,
+                    select: JSON.stringify(select)
+                }
+            })
+                .then((res) => {
+                    res = res.data;
+                    this.layerHeader = res;
+                    q.resolve(res);
+                });
+            return q.promise;
+        }
+
+        /**
+         * Mengambil data titik.
+         * Digunakan di:
+         * map-container
+         * @param {Object} select - Query data yang dicari dengan atribut waktu dan dimensi lainnya jika ada (contoh level).
+         * @param {Object} latlng - Titik yang mau di ambil dengan atribut lat dan lng.
+         * @returns {Promise}
+         */
+        getDataPoint(select, latlng) {
+            var q = this.q.defer();
+            this.http({
+                'url': `${this.urlServer}/api/getdatapoint`,
+                'method': 'GET',
+                'params': {
+                    'id': this.id,
+                    'key': this.key,
+                    'select': JSON.stringify(select),
+                    'latlng': JSON.stringify(latlng)
+                }
+            })
+                .then((res) => {
+                    res = res.data;
+                    res.attrs.units = res.attrs.units === 'none' ? ' ' : res.attrs.units;
+                    q.resolve(res);
+                });
+            return q.promise;
+        }
+
+        /**
+         * Mengambil header data spasial yang telah di potong berupa bounding, legend, long_name, dan units. 
+         * Digunakan di:
+         * map-container
+         * @param {Object} select - Query data yang dicari dengan atribut waktu dan dimensi lainnya jika ada (contoh level).
+         * @param {Object} bounds - Bounding data yang mau di ambil.
+         * @returns {Promise}
+         */
+        getLayerHeaderCropped(select, bounds) {
+            var q = this.q.defer();
+            this.http({
+                'url': `${this.urlServer}/api/getlayerheadercropped`,
+                'method': 'GET',
+                'params': {
+                    'id': this.id,
+                    'key': this.key,
+                    'select': JSON.stringify(select),
+                    'bounds': JSON.stringify(bounds),
+                }
+            })
+                .then((res) => {
+                    res = res.data;
+                    this.layerHeader = res;
+                    q.resolve(res);
+                })
+            return q.promise;
+        }
+
+        /**
+         * Mengambil data time series min atau max.
+         * Digunakan di:
+         * footer-min-max-tables
+         * @param {Object} select - Query data yang dicari dengan atribut waktu dan dimensi lainnya jika ada (contoh level).
+         * @returns {Promise}
+         */
+        getDataPointMinOrMax(select) {
+            let q = this.q.defer(),
+                _select = Object.assign({}, select);
+            delete _select.minOrMax;
+
+            this.http({
+                url: `${this.urlServer}/api/getdatapointminormax`,
+                method: 'GET',
+                params: {
+                    id: this.id,
+                    key: this.key,
+                    minormax: select.minOrMax,
+                    select: JSON.stringify(_select)
+                }
+            })
+                .then((res) => {
+                    res = res.data;
+                    q.resolve(res);
+                })
+                .catch((res) => {
+                    q.reject(res);
                 });
             return q.promise;
         }

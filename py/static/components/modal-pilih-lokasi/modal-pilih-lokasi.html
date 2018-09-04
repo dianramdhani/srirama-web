@@ -1,0 +1,42 @@
+<style>
+    .pac-container:after {
+        content: none !important;
+    }
+
+    .pac-container {
+        z-index: 999999999999999 !important;
+    }
+</style>
+
+<div ng-show="$ctrl.modalPilihLokasiShow">
+    <div class="w3-modal" ng-style="{ zIndex: style.zIndex, display: $ctrl.modalPilihLokasiShow? 'block': 'none' }">
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+            <div class="w3-center">
+                <br>
+                <span class="w3-button w3-xlarge w3-hover-red w3-display-topright" title="Close Modal" ng-click="$ctrl.modalPilihLokasiShow = false;">&times;</span>
+                <h3>Pilih Lokasi</h3>
+            </div>
+
+            <div class="w3-container">
+                <div class="w3-section">
+                    <h4 style="font-weight: bold;">Berdasarkan Nama Lokasi</h4>
+
+                    <label>Nama Lokasi</label>
+                    <input class="w3-input" type="text" id="search-location">
+
+                    <hr>
+
+                    <h4 style="font-weight: bold;">Berdasarkan Koordinat</h4>
+
+                    <label>Latitude</label>
+                    <input class="w3-input" type="number" ng-model="lat">
+
+                    <label>Longitude</label>
+                    <input class="w3-input" type="number" ng-model="lng">
+
+                    <button class="w3-button w3-block w3-light-grey w3-section w3-padding" type="submit" ng-click="$ctrl.modalPilihLokasiShow = false; $ctrl.selectLocation({ latlng: { lat, lng } }); lat = ''; lng = '';">Pilih</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

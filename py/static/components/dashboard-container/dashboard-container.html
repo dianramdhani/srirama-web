@@ -8,10 +8,10 @@
 <div class="w3-container">
     <div class="w3-row" style="height: 100%;">
         <div class="w3-quarter w3-panel-dashboard">
-            <div class="w3-row w3-margin-bottom" style="height: 280px;">
+            <div class="w3-row w3-margin-bottom" style="height: 280px;" ng-show="$ctrl.latlng">
                 <dashboard-map latlng="$ctrl.latlng"></dashboard-map>
             </div>
-            <div class="w3-card-4 w3-row w3-margin-bottom">
+            <div class="w3-card-4 w3-row w3-margin-bottom" ng-show="data.length > 0">
                 <div class="w3-container w3-light-grey">
                     <h3>Dataset</h3>
                 </div>

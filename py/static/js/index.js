@@ -5,7 +5,7 @@ angular.module('srirama', ['ngRoute'])
                 template: '<dashboard-container></dashboard-container>'
             })
             .when('/analisis', {
-                template: 'analisis'
+                template: '<tabs-container></tabs-container>'
             })
             .when('/bantuan', {
                 template: 'bantuan'
@@ -17,3 +17,5 @@ require('../components/dashboard-graph/dashboard-graph');
 require('../components/dashboard-map/dashboard-map');
 require('../components/dashboard-info/dashboard-info');
 require('../components/header-container/header-container');
+require('../components/tabs-container/tabs-container');
+require('../components/datasets-container/datasets-container');

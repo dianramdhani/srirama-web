@@ -1,0 +1,14 @@
+<div style="position: absolute; top: 10px; right: 10px; z-index: 9999999;">
+    <button class="w3-button w3-round w3-white w3-border w3-small" style="position: absolute; right: 0;" ng-click="listMenuShow = !listMenuShow">{{listMenuShow? 'Tutup Menu': 'Menu'}}</button>
+    <div style="position: absolute; right: 0; top: 40px; width: 300px;" ng-init="listMenuShow = false" ng-show="listMenuShow">
+        <button class="w3-button w3-block w3-round w3-white w3-border w3-small" ng-init="$ctrl.modalPilihDimensiShow = true" ng-click="$ctrl.modalPilihDimensiShow = true; listMenuShow = false;">Pilih Dimensi</button>
+        <button class="w3-button w3-block w3-round w3-white w3-border w3-small" ng-click="$ctrl.modalPilihLokasiShow = true; listMenuShow = false;">Pilih Lokasi</button>
+        <button class="w3-button w3-block w3-round w3-white w3-border w3-small" ng-click="$ctrl.modalCariNilaiMinMaxShow = true; listMenuShow = false;">Cari Nilai Terkecil dan Terbesar</button>
+        <button class="w3-button w3-block w3-round w3-white w3-border w3-small" ng-click="$ctrl.modalPotongDataShow = true; listMenuShow = false;">Potong Data</button>
+        <button class="w3-button w3-block w3-round w3-white w3-border w3-small" ng-click="$ctrl.footerShow({ componentName: 'footer-graphs' }); listMenuShow = false;">Lihat Grafik</button>
+        <button class="w3-button w3-block w3-round w3-white w3-border w3-small" ng-click="$ctrl.footerShow({ componentName: 'footer-min-max-tables' }); listMenuShow = false;">Lihat Tabel Min dan Max</button>
+    </div>
+</div>
+
+<modal-pilih-dimensi select-dimension="$ctrl.selectDimension({selected})" modal-pilih-dimensi-show="$ctrl.modalPilihDimensiShow"></modal-pilih-dimensi>
+<modal-pilih-lokasi select-location="$ctrl.selectLocation({latlng})" modal-pilih-lokasi-show="$ctrl.modalPilihLokasiShow"></modal-pilih-lokasi>

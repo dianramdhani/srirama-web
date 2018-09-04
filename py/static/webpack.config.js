@@ -18,4 +18,22 @@ const index = {
     }
 };
 
-module.exports = [index];
+const plot = {
+    entry: './js/plot.js',
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'plot.js',
+    },
+    module: {
+        rules: [
+            {
+                test: /\.html$/,
+                use: [
+                    'html-loader'
+                ]
+            }
+        ]
+    }
+};
+
+module.exports = [index, plot];

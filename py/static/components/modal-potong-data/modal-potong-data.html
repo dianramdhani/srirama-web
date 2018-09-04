@@ -1,0 +1,33 @@
+<div ng-show="$ctrl.modalPotongDataShow">
+    <div class="w3-modal" style="z-index: 99999999;" ng-style="{ display: $ctrl.modalPotongDataShow? 'block': 'none' }">
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+            <div class="w3-center">
+                <br>
+                <span class="w3-button w3-xlarge w3-hover-red w3-display-topright" title="Close Modal" ng-click="$ctrl.modalPotongDataShow = false">&times;</span>
+                <h3>Potong Data</h3>
+            </div>
+
+            <div class="w3-container">
+                <div class="w3-section">
+                    <h5 style="font-weight: bold;">Potong Data Dalam Jendela</h5>
+                    <button class="w3-button w3-block w3-light-grey w3-section w3-padding w3-small" type="submit" ng-click="$ctrl.spatialCrop(); $ctrl.modalPotongDataShow = false;">Potong Data Dalam Jendela</button>
+                    <hr>
+                    <h5 style="font-weight: bold;">Potong Data Dalam Batas</h5>
+                    <span class="w3-small" ng-init="bounds={ lat: [], lng: [] }">
+                        <label>Latitude Barat Selatan</label>
+                        <input class="w3-input" type="number" ng-model="bounds.lat[0]">
+                        <label>Longitude Barat Selatan</label>
+                        <input class="w3-input" type="number" ng-model="bounds.lng[0]">
+                        <label>Latitude Timur Utara</label>
+                        <input class="w3-input" type="number" ng-model="bounds.lat[1]">
+                        <label>Longitude Timur Utara</label>
+                        <input class="w3-input" type="number" ng-model="bounds.lng[1]">
+                    </span>
+                    <button class="w3-button w3-block w3-light-grey w3-section w3-padding w3-small" type="submit" ng-click="$ctrl.spatialCrop({bounds}); $ctrl.modalPotongDataShow = false;">Potong Data</button>
+                    <hr>
+                    <button class="w3-button w3-block w3-light-grey w3-section w3-padding w3-small" type="submit" ng-click="$ctrl.restoreSpatialCropped(); $ctrl.modalPotongDataShow = false;">Kembalikan Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

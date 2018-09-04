@@ -3,15 +3,9 @@ from io import BytesIO
 from numpy import array, nanmin, nanmax, interp, zeros, uint8, flipud, isnan
 from os.path import dirname
 
-# rgba untuk antisipasi nan
-try:
-    legend = array(
-        Image.open(dirname(__file__) + '/../app/img/legend.png').convert(
-            'RGBA'))[0]
-except IOError:
-    legend = array(
-        Image.open(dirname(__file__) + '/../../app/img/legend.png').convert(
-            'RGBA'))[0]
+
+legend = array(Image.open(dirname(__file__) +
+                          '/static/img/legend.png').convert('RGBA'))[0]
 
 
 def toImage(data):
