@@ -6,7 +6,7 @@
         white-space: nowrap;
     }
 </style>
-<div style="padding: 0px 20px; background-color: rgb(242, 242, 242);">
+<div style="padding: 0px 20px; background-color: rgb(242, 242, 242);" ng-show="datasets">
     <h3 style="margin: 5px 0px 20px 14px;">Dataset</h3>
     <p style="margin: 8px 15px;" class="w3-small">
         <label style="padding-right: 15px; font-weight: bold;">Cari:</label>
@@ -18,7 +18,6 @@
                 <th>Kunci</th>
                 <th>Nama Panjang</th>
                 <th>Unit</th>
-                <th>Dimensi</th>
                 <th>Proses</th>
             </tr>
         </thead>
@@ -27,11 +26,9 @@
                 <td>{{key.key}}</td>
                 <td>{{key.long_name}}</td>
                 <td>{{key.units}}</td>
-                <td>{{key.dims}}</td>
-                <td ng-hide="key.dims.length < 3">
+                <td>
                     <button class="w3-btn w3-round w3-border w3-tiny w3-padding-small w3-light-grey" ng-click="plot(dataset.id, key)">Plot</button>
                 </td>
-                <td ng-show="key.dims.length < 3"></td>
             </tr>
         </tbody>
     </table>

@@ -48,7 +48,6 @@ angular.module('srirama')
                 });
 
                 this.scope.plot = (id, i) => {
-                    console.log('footerMinMaxTables plot', id, i);
                     angular.forEach(this.tables, (table) => {
                         if (table.id === id) {
                             let _table = angular.copy(table);

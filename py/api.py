@@ -369,7 +369,7 @@ def getdatapointminormax():
     key = request.args.get('key')
     minormax = request.args.get('minormax')
     select = json.loads(request.args.get('select'))
-    hasil = Datasets().getDataPointMinOrMax(
+    hasil = datasets.getDataPointMinOrMax(
         id=id, key=key, minormax=minormax, select=select)
     return jsonify(hasil)
 

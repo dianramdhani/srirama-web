@@ -12,7 +12,15 @@
     </div>
     <div class="w3-col m7">
         <div class="w3-row" style="width: 100%; background-color: #181919;">
-            <h3 class="w3-margin-left" style="height: 36px; margin-top: 0; margin-bottom: 0; font-weight: bold; color: lightgrey; overflow: hidden;">
+            <style>
+                @media screen and (max-width: 904px) {
+                    h3.srirama-title {
+                        padding-top: 5px;
+                        font-size: 16px;
+                    }
+                }
+            </style>
+            <h3 class="w3-margin-left srirama-title" style="height: 36px; margin-top: 0; margin-bottom: 0; font-weight: bold; color: lightgrey; overflow: hidden;">
                 Sistem Informasi Perubahan Iklim Indonesia
             </h3>
         </div>
@@ -21,7 +29,18 @@
             <a href="#!analisis" class="w3-bar-item w3-button w3-padding-small">Analisis</a>
         </div>
     </div>
-    <div class="w3-col m3" style="height: 36px;">
+    <style>
+        @media screen and (max-width: 600px) {
+            div.srirama-support {
+                position: absolute;
+                right: 0;
+                top: 102px;
+                width: 60px;
+                z-index: 100;
+            }
+        }
+    </style>
+    <div class="w3-col m3 srirama-support" style="height: 36px;">
         <a href="http://psta.lapan.go.id/">
             <img class="w3-right" src="/img/logomini.png" height="100%">
         </a>
