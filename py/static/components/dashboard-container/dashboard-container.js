@@ -12,13 +12,13 @@ angular.module('srirama')
                         id: 0,
                         key: 'ts',
                         select: {},
-                        info: 'ts adalah ...'
+                        info: 'Surface Temperature adalah suhu pada permukaan bumi tanpa memperhitungkan perbedaan tekanan antar permukaan.'
                     },
                     {
                         id: 0,
                         key: 'rhscrn',
                         select: {},
-                        info: 'rhscrn adalah ...'
+                        info: 'Screen relative humidity adalah kelembaban relatif untuk permukaan bumi.'
                     },
                     {
                         id: 0,
@@ -36,7 +36,7 @@ angular.module('srirama')
                         id: 0,
                         key: 'rnd24',
                         select: {},
-                        info: 'rnd24 adalah ...'
+                        info: '24hr precipitation adalah akumulasi curah hujan selama 24 jam terakhir.'
                     },
                     {
                         id: 0,
@@ -84,7 +84,7 @@ angular.module('srirama')
                         id: 0,
                         key: 'tsea',
                         select: {},
-                        info: 'tsea adalah ...'
+                        info: 'Sea surface temperature adalah suhu permukaan laut.'
                     },
                     {
                         id: 0,
@@ -102,19 +102,19 @@ angular.module('srirama')
                         id: 0,
                         key: 'u200',
                         select: {},
-                        info: 'u200 adalah ...'
+                        info: 'Zonal wind at 200hPa adalah pergerakan vektor angin zonal (timur ke barat atau barat ke timur) 200hPa.'
                     },
                     {
                         id: 0,
                         key: 'u850',
                         select: {},
-                        info: 'u850 adalah ...'
+                        info: 'Zonal wind at 850hPa adalah pergerakan vektor angin zonal (timur ke barat atau barat ke timur) 850hPa.'
                     },
                     {
                         id: 0,
                         key: 'sfcwind',
                         select: {},
-                        info: 'sfcwind adalah ...'
+                        info: '10m wind speed adalah pergerakan angin pada permukaan bumi.'
                     },
                 ];
                 this.active = [];

@@ -20,6 +20,7 @@ angular.module('srirama')
                     'hfss',
                     'mrros',
                     'pmsl_ave',
+                    'theta',
                     'tsea',
                     'dustwd_ave',
                     'dustdd_ave',

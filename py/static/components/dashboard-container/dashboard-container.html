@@ -4,6 +4,18 @@
         margin-top: 10px !important;
         margin-bottom: 10px !important;
     }
+
+    @media screen and (max-width: 1300px) {
+        button.button-dataset {
+            font-size: 12px;
+        }
+    }
+
+    @media screen and (max-width: 600px) {
+        button.button-dataset {
+            font-size: inherit;
+        }
+    }
 </style>
 <div class="w3-container">
     <div class="w3-row" style="height: 100%;">
@@ -17,7 +29,8 @@
                 </div>
                 <div class="w3-container" style="height: 550px; overflow-x: hidden; overflow-y: scroll;">
                     <p ng-repeat="_data in data">
-                        <button class="w3-button w3-block" ng-class="_data.active? 'w3-disabled': ''" ng-click="_data.active || $ctrl.getTimeSeries($index)">{{_data.long_name}}</button>
+                        <button class="w3-button w3-block button-dataset" ng-class="_data.active? 'w3-disabled': ''"
+                            ng-click="_data.active || $ctrl.getTimeSeries($index)">{{_data.long_name}}</button>
                     </p>
                 </div>
             </div>
