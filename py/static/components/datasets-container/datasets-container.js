@@ -40,8 +40,17 @@ angular.module('srirama')
                 this.scope.plot = (id, key) => {
                     this.addTabs({
                         tab: {
-                            title: key.long_name,
-                            content: `plot.html?id=${id}&key=${key.key}`
+                            title: `Plot - ${key.long_name}`,
+                            content: `plot.html?process=plot&id=${id}&key=${key.key}`
+                        }
+                    });
+                }
+
+                this.scope.anomali = (id, key) => {
+                    this.addTabs({
+                        tab: {
+                            title: `Anomali - ${key.long_name}`,
+                            content: `plot.html?process=anomali&id=${id}&key=${key.key}`
                         }
                     });
                 }

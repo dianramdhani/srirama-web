@@ -4,6 +4,17 @@ angular.module('srirama')
             this.http = $http;
             this.q = $q;
             this.urlServer = '';
+            this.projections = [
+                '1980',
+                '1990',
+                '2000',
+                '2005',
+                '2020s',
+                '2030s',
+                '2040s',
+                '2050s',
+                '2060s'
+            ];
         }
 
         /**
@@ -68,6 +79,7 @@ angular.module('srirama')
             const url = new URL(window.location.href);
             this.id = url.searchParams.get('id');
             this.key = url.searchParams.get('key');
+            this.process = url.searchParams.get('process');
 
             var q = this.q.defer();
             this.http({
@@ -93,22 +105,43 @@ angular.module('srirama')
          * @returns {Promise}
          */
         getLayerHeader(select) {
-            var q = this.q.defer();
-            this.http({
-                url: `${this.urlServer}/api/getlayerheader`,
-                method: 'GET',
-                params: {
-                    id: this.id,
-                    key: this.key,
-                    select: JSON.stringify(select)
-                }
-            })
-                .then((res) => {
-                    res = res.data;
-                    this.layerHeader = res;
-                    q.resolve(res);
-                });
-            return q.promise;
+            if (this.process === 'plot') {
+                var q = this.q.defer();
+                this.http({
+                    url: `${this.urlServer}/api/getlayerheader`,
+                    method: 'GET',
+                    params: {
+                        id: this.id,
+                        key: this.key,
+                        select: JSON.stringify(select)
+                    }
+                })
+                    .then((res) => {
+                        res = res.data;
+                        this.layerHeader = res;
+                        q.resolve(res);
+                    });
+                return q.promise;
+            }
+            if (this.process === 'anomali') {
+                var q = this.q.defer();
+                this.http({
+                    url: `${this.urlServer}/api/getlayerheaderanomali`,
+                    method: 'GET',
+                    params: {
+                        id: this.id,
+                        key: this.key,
+                        select: JSON.stringify(select.select),
+                        projection: select.projection
+                    }
+                })
+                    .then((res) => {
+                        res = res.data;
+                        this.layerHeader = res;
+                        q.resolve(res);
+                    });
+                return q.promise;
+            }
         }
 
         /**

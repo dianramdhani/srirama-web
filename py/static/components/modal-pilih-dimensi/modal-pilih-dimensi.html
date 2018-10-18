@@ -7,16 +7,32 @@
                 <h3>Pilih Dimensi</h3>
             </div>
 
-            <div class="w3-container">
-                <div class="w3-section">
+            <div class="w3-container" ng-switch="process">
+                <div class="w3-section" ng-switch-when="plot">
                     <div ng-repeat="dim in dims">
                         <label>
                             <b>{{dim.key | uppercase}}</b>
                         </label>
-                        <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="select[dim.key]" ng-options="o for o in dim.values"
-                            required></select>
+                        <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="select[dim.key]"
+                            ng-options="o for o in dim.values" required></select>
                     </div>
                     <button class="w3-button w3-block w3-light-grey w3-section w3-padding" type="submit" ng-click="$ctrl.selectDimension({ selected: select }); $ctrl.modalPilihDimensiShow = false;">Pilih</button>
+                </div>
+
+                <div class="w3-section" ng-switch-when="anomali">
+                    <label>
+                        <b>Proyeksi</b>
+                    </label>
+                    <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="projection"
+                        ng-options="o for o in projections" required></select>
+                    <div ng-repeat="dim in dims">
+                        <label>
+                            <b>{{dim.key | uppercase}}</b>
+                        </label>
+                        <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="select[dim.key]"
+                            ng-options="o for o in dim.values" required></select>
+                    </div>
+                    <button class="w3-button w3-block w3-light-grey w3-section w3-padding" type="submit" ng-click="$ctrl.selectDimension({ selected: {select, projection} }); $ctrl.modalPilihDimensiShow = false;">Pilih</button>
                 </div>
             </div>
         </div>
