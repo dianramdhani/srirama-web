@@ -153,23 +153,45 @@ angular.module('srirama')
          * @returns {Promise}
          */
         getDataPoint(select, latlng) {
-            var q = this.q.defer();
-            this.http({
-                'url': `${this.urlServer}/api/getdatapoint`,
-                'method': 'GET',
-                'params': {
-                    'id': this.id,
-                    'key': this.key,
-                    'select': JSON.stringify(select),
-                    'latlng': JSON.stringify(latlng)
-                }
-            })
-                .then((res) => {
-                    res = res.data;
-                    res.attrs.units = res.attrs.units === 'none' ? ' ' : res.attrs.units;
-                    q.resolve(res);
-                });
-            return q.promise;
+            if (this.process === 'plot') {
+                var q = this.q.defer();
+                this.http({
+                    url: `${this.urlServer}/api/getdatapoint`,
+                    method: 'GET',
+                    params: {
+                        id: this.id,
+                        key: this.key,
+                        select: JSON.stringify(select),
+                        latlng: JSON.stringify(latlng)
+                    }
+                })
+                    .then((res) => {
+                        res = res.data;
+                        res.attrs.units = res.attrs.units === 'none' ? ' ' : res.attrs.units;
+                        q.resolve(res);
+                    });
+                return q.promise;
+            }
+            if (this.process === 'anomali') {
+                var q = this.q.defer();
+                this.http({
+                    url: `${this.urlServer}/api/getdatapointanomali`,
+                    method: 'GET',
+                    params: {
+                        id: this.id,
+                        key: this.key,
+                        select: JSON.stringify(select.select),
+                        latlng: JSON.stringify(latlng),
+                        projection: select.projection
+                    }
+                })
+                    .then((res) => {
+                        res = res.data;
+                        res.attrs.units = res.attrs.units === 'none' ? ' ' : res.attrs.units;
+                        q.resolve(res);
+                    });
+                return q.promise;
+            }
         }
 
         /**
