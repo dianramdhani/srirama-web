@@ -120,93 +120,187 @@ angular.module('srirama')
             }
 
             selectTime(selected) {
-                angular.forEach(this.graphs, (graph) => {
-                    if (graph.id === this.scope.idTabActiveNow) {
-                        this.modalLoadingShow = true;
-                        this.api.getDataPointTimeSeries(selected, graph.latlng).then((res) => {
-                            this.modalLoadingShow = false;
-                            initGraph(`graph-${graph.id}`, res);
-                            graph['dataPointTimeSeries'] = res;
-                        });
-                    }
-                });
-
-                function initGraph(divId, res) {
-                    var selectedToTitle = ((selected) => {
-                        var res = '', i = -1;
-                        for (const key in selected) {
-                            i++;
-                            if (i === 0) {
-                                res = res + `${key.toUpperCase()} 1: ${selected[key][0]}, ${key.toUpperCase()} 2: ${selected[key][1]}`
-                            } else {
-                                res = res + `, ${key.toUpperCase()}: ${selected[key]}`
-                            }
+                if (this.api.process === 'plot') {
+                    angular.forEach(this.graphs, (graph) => {
+                        if (graph.id === this.scope.idTabActiveNow) {
+                            this.modalLoadingShow = true;
+                            this.api.getDataPointTimeSeries(selected, graph.latlng).then((res) => {
+                                this.modalLoadingShow = false;
+                                initGraph(`graph-${graph.id}`, res);
+                                graph['dataPointTimeSeries'] = res;
+                            });
                         }
-                        return res;
-                    })(selected);
-                    var times = res.coords[res.dims[0]].data,
-                        data = res.data,
-                        title = `
-                        ${res.attrs.long_name} (${res.attrs.units})
-                        <br>
-                        ${selectedToTitle}
-                        `,
-                        dataArr = [];
-                    for (var i = 0; i < data.length; i++) {
-                        dataArr.push([(new Date(times[i])).getTime(), data[i]]);    //.push(xArr, yArr)
-                    }
-
-                    var graph = Highcharts.stockChart(divId, {
-                        rangeSelector: {
-                            buttons: [{
-                                type: 'year',
-                                count: 1,
-                                text: '1y'
-                            }, {
-                                type: 'year',
-                                count: 10,
-                                text: '10y'
-                            }, {
-                                type: 'year',
-                                count: 30,
-                                text: '30y'
-                            }, {
-                                type: 'all',
-                                text: 'All'
-                            }],
-                            selected: 3
-                        },
-                        title: {
-                            text: title
-                        },
-                        xAxis: {
-                            type: 'datetime',
-                            labels: {
-                                formatter: function () {
-                                    return Highcharts.dateFormat('%Y %b', this.value);
-                                }
-                            }
-                        },
-                        yAxis: {
-                            opposite: false
-                        },
-                        tooltip: {
-                            formatter: function () {
-                                return Highcharts.dateFormat('%Y %b', new Date(this.x)) +
-                                    `<br><b>${this.y}</b>`;
-                            }
-                        },
-                        series: [{
-                            data: dataArr
-                        }]
                     });
 
-                    if (document.getElementById(divId)) {
-                        window.addEventListener('resize', () => {
-                            var width = document.getElementById(divId).clientWidth,
-                                height = document.getElementById(divId).clientHeight;
-                            graph.setSize(width, height);
-                        }, true);
+                    function initGraph(divId, res) {
+                        var selectedToTitle = ((selected) => {
+                            var res = '', i = -1;
+                            for (const key in selected) {
+                                i++;
+                                if (i === 0) {
+                                    res = res + `${key.toUpperCase()} 1: ${selected[key][0]}, ${key.toUpperCase()} 2: ${selected[key][1]}`
+                                } else {
+                                    res = res + `, ${key.toUpperCase()}: ${selected[key]}`
+                                }
+                            }
+                            return res;
+                        })(selected);
+                        var times = res.coords[res.dims[0]].data,
+                            data = res.data,
+                            title = `
+                            ${res.attrs.long_name} (${res.attrs.units})
+                            <br>
+                            ${selectedToTitle}
+                            `,
+                            dataArr = [];
+                        for (var i = 0; i < data.length; i++) {
+                            dataArr.push([(new Date(times[i])).getTime(), data[i]]);    //.push(xArr, yArr)
+                        }
+
+                        var graph = Highcharts.stockChart(divId, {
+                            rangeSelector: {
+                                buttons: [{
+                                    type: 'year',
+                                    count: 1,
+                                    text: '1y'
+                                }, {
+                                    type: 'year',
+                                    count: 10,
+                                    text: '10y'
+                                }, {
+                                    type: 'year',
+                                    count: 30,
+                                    text: '30y'
+                                }, {
+                                    type: 'all',
+                                    text: 'All'
+                                }],
+                                selected: 3
+                            },
+                            title: {
+                                text: title
+                            },
+                            xAxis: {
+                                type: 'datetime',
+                                labels: {
+                                    formatter: function () {
+                                        return Highcharts.dateFormat('%Y %b', this.value);
+                                    }
+                                }
+                            },
+                            yAxis: {
+                                opposite: false
+                            },
+                            tooltip: {
+                                formatter: function () {
+                                    return Highcharts.dateFormat('%Y %b', new Date(this.x)) +
+                                        `<br><b>${this.y}</b>`;
+                                }
+                            },
+                            series: [{
+                                data: dataArr
+                            }]
+                        });
+
+                        if (document.getElementById(divId)) {
+                            window.addEventListener('resize', () => {
+                                var width = document.getElementById(divId).clientWidth,
+                                    height = document.getElementById(divId).clientHeight;
+                                graph.setSize(width, height);
+                            }, true);
+                        }
+                    }
+                }
+
+                if (this.api.process === 'anomali') {
+                    angular.forEach(this.graphs, (graph) => {
+                        if (graph.id === this.scope.idTabActiveNow) {
+                            this.modalLoadingShow = true;
+                            this.api.getDataPointTimeSeries(selected, graph.latlng).then((res) => {
+                                this.modalLoadingShow = false;
+                                initGraph(`graph-${graph.id}`, res);
+                                graph['dataPointTimeSeries'] = res;
+                            });
+                        }
+                    });
+
+                    function initGraph(divId, res) {
+                        var selectedToTitle = ((selected) => {
+                            var res = '', i = -1;
+                            for (const key in selected) {
+                                i++;
+                                if (i === 0) {
+                                    res = res + `${key.toUpperCase()} 1: ${selected[key][0]}, ${key.toUpperCase()} 2: ${selected[key][1]}`
+                                } else {
+                                    res = res + `, ${key.toUpperCase()}: ${selected[key]}`
+                                }
+                            }
+                            return res;
+                        })(selected.select);
+                        var times = res.coords[res.dims[0]].data,
+                            data = res.data,
+                            title = `
+                            ${res.attrs.long_name} (${res.attrs.units})
+                            <br>
+                            ${selectedToTitle}, PROYEKSI: ${selected.projection}
+                            `,
+                            dataArr = [];
+                        for (var i = 0; i < data.length; i++) {
+                            dataArr.push([(new Date(times[i])).getTime(), data[i]]);    //.push(xArr, yArr)
+                        }
+
+                        var graph = Highcharts.stockChart(divId, {
+                            rangeSelector: {
+                                buttons: [{
+                                    type: 'year',
+                                    count: 1,
+                                    text: '1y'
+                                }, {
+                                    type: 'year',
+                                    count: 10,
+                                    text: '10y'
+                                }, {
+                                    type: 'year',
+                                    count: 30,
+                                    text: '30y'
+                                }, {
+                                    type: 'all',
+                                    text: 'All'
+                                }],
+                                selected: 3
+                            },
+                            title: {
+                                text: title
+                            },
+                            xAxis: {
+                                type: 'datetime',
+                                labels: {
+                                    formatter: function () {
+                                        return Highcharts.dateFormat('%Y %b', this.value);
+                                    }
+                                }
+                            },
+                            yAxis: {
+                                opposite: false
+                            },
+                            tooltip: {
+                                formatter: function () {
+                                    return Highcharts.dateFormat('%Y %b', new Date(this.x)) +
+                                        `<br><b>${this.y}</b>`;
+                                }
+                            },
+                            series: [{
+                                data: dataArr
+                            }]
+                        });
+
+                        if (document.getElementById(divId)) {
+                            window.addEventListener('resize', () => {
+                                var width = document.getElementById(divId).clientWidth,
+                                    height = document.getElementById(divId).clientHeight;
+                                graph.setSize(width, height);
+                            }, true);
+                        }
                     }
                 }
             }

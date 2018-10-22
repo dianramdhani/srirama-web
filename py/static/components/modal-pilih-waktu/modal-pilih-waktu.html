@@ -7,27 +7,27 @@
                 <h3>{{modal.title}}</h3>
             </div>
 
-            <div class="w3-container">
-                <div class="w3-section">
+            <div class="w3-container" ng-switch="process">
+                <div class="w3-section" ng-switch-when="plot">
                     <div ng-repeat="dim in dims">
                         <span ng-if="$index === 0">
                             <label>
                                 <b>{{dim.key | uppercase}} 1</b>
                             </label>
-                            <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="select[dim.key][0]" ng-options="o for o in dim.values"
-                                required></select>
+                            <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="select[dim.key][0]"
+                                ng-options="o for o in dim.values" required></select>
                             <label>
                                 <b>{{dim.key | uppercase}} 2</b>
                             </label>
-                            <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="select[dim.key][1]" ng-options="o for o in dim.values"
-                                required></select>
+                            <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="select[dim.key][1]"
+                                ng-options="o for o in dim.values" required></select>
                         </span>
                         <span ng-if="$index > 0">
                             <label>
                                 <b>{{dim.key | uppercase}}</b>
                             </label>
-                            <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="select[dim.key]" ng-options="o for o in dim.values"
-                                required></select>
+                            <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="select[dim.key]"
+                                ng-options="o for o in dim.values" required></select>
                         </span>
                     </div>
                     <p class="w3-small">
@@ -37,6 +37,42 @@
                         <b>{{dims[0].key | uppercase}} 2</b>.
                     </p>
                     <button class="w3-button w3-block w3-light-grey w3-section w3-padding" type="submit" ng-click="$ctrl.selectTime({ selected: select }); $ctrl.modalPilihWaktuShow = false;">Pilih</button>
+                </div>
+
+                <div class="w3-section" ng-switch-when="anomali">
+                    <label>
+                        <b>Proyeksi</b>
+                    </label>
+                    <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="projection" ng-options="o for o in projections"
+                        required></select>
+                    <div ng-repeat="dim in dims">
+                        <span ng-if="$index === 0">
+                            <label>
+                                <b>{{dim.key | uppercase}} 1</b>
+                            </label>
+                            <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="select[dim.key][0]"
+                                ng-options="o for o in dim.values" required></select>
+                            <label>
+                                <b>{{dim.key | uppercase}} 2</b>
+                            </label>
+                            <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="select[dim.key][1]"
+                                ng-options="o for o in dim.values" required></select>
+                        </span>
+                        <span ng-if="$index > 0">
+                            <label>
+                                <b>{{dim.key | uppercase}}</b>
+                            </label>
+                            <select class="w3-input w3-border w3-select w3-margin-bottom" ng-model="select[dim.key]"
+                                ng-options="o for o in dim.values" required></select>
+                        </span>
+                    </div>
+                    <p class="w3-small">
+                        Catatan!
+                        <br>
+                        <b>{{dims[0].key | uppercase}} 1</b> harus lebih kecil dari
+                        <b>{{dims[0].key | uppercase}} 2</b>.
+                    </p>
+                    <button class="w3-button w3-block w3-light-grey w3-section w3-padding" type="submit" ng-click="$ctrl.selectTime({ selected: {select, projection} }); $ctrl.modalPilihWaktuShow = false;">Pilih</button>
                 </div>
             </div>
         </div>

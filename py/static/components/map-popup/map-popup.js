@@ -42,7 +42,7 @@ angular.module('srirama')
                                     Longitude: ${latlng.lng}
                                     <br>
                                     ${this.dimSelectedToTemplatePopup()}
-                                    Proyeks: ${this.dimSelected.projection}
+                                    Proyeksi: ${this.dimSelected.projection}
                                     <br>
                                     <b>Data: ${dataPoint.data} ${dataPoint.attrs.units}</b>
                                 </p>

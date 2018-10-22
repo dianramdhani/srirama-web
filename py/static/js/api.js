@@ -49,25 +49,47 @@ angular.module('srirama')
                 this.key = key;
             }
 
-            var q = this.q.defer();
-            this.http({
-                'url': `${this.urlServer}/api/getdatapointtimeseries`,
-                'method': 'GET',
-                'params': {
-                    'id': this.id,
-                    'key': this.key,
-                    'select': JSON.stringify(select),
-                    'latlng': JSON.stringify(latlng),
-                }
-            })
-                .then((res) => {
-                    res = res.data;
-                    q.resolve(res);
-                });
-            return q.promise;
+            if (this.process === 'plot') {
+                var q = this.q.defer();
+                this.http({
+                    url: `${this.urlServer}/api/getdatapointtimeseries`,
+                    method: 'GET',
+                    params: {
+                        id: this.id,
+                        key: this.key,
+                        select: JSON.stringify(select),
+                        latlng: JSON.stringify(latlng)
+                    }
+                })
+                    .then((res) => {
+                        res = res.data;
+                        q.resolve(res);
+                    });
+                return q.promise;
+            }
+
+            if (this.process === 'anomali') {
+                console.log(select);
+                var q = this.q.defer();
+                this.http({
+                    url: `${this.urlServer}/api/getdatapointtimeseriesanomali`,
+                    method: 'GET',
+                    params: {
+                        id: this.id,
+                        key: this.key,
+                        select: JSON.stringify(select.select),
+                        latlng: JSON.stringify(latlng),
+                        projection: select.projection
+                    }
+                })
+                    .then((res) => {
+                        res = res.data;
+                        q.resolve(res);
+                    });
+                return q.promise;
+            }
         }
 
-        // belum di test
 
         /**
          * Mengambil seluruh dimensi selain latitude dan longitude.

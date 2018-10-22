@@ -29,8 +29,10 @@ angular.module('srirama')
                     })
                     .then(() => {
                         this.scope.process = this.api.process;
-                        this.scope.projections = this.api.projections;
-                        this.scope.projection = this.api.projections[0];
+                        if(this.scope.process === 'anomali'){
+                            this.scope.projections = this.api.projections;
+                            this.scope.projection = this.api.projections[0];
+                        }
                     });
             }
         }],
