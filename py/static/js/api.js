@@ -49,6 +49,10 @@ angular.module('srirama')
                 this.key = key;
             }
 
+            if (!this.process) {
+                this.process = 'plot';
+            }
+
             if (this.process === 'plot') {
                 var q = this.q.defer();
                 this.http({

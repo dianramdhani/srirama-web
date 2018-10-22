@@ -1,5 +1,9 @@
+import plot
+from flask_cors import CORS
+from flask import Flask, request, jsonify, send_file, json
 import xarray
 import numpy
+import pandas
 
 
 class Datasets():
@@ -28,6 +32,61 @@ class Datasets():
             legend = (((max - min) / (n - 1)) * i) + min
             res['legends'].append(legend)
         return res
+
+    def __getStartEndYear(self, projection):
+        projections = [
+            {
+                'projection': '1980',
+                'startYear': '1951',
+                'endYear': '1980'
+            },
+            {
+                'projection': '1990',
+                'startYear': '1961',
+                'endYear': '1990'
+            },
+            {
+                'projection': '2000',
+                'startYear': '1971',
+                'endYear': '2000'
+            },
+            {
+                'projection': '2005',
+                'startYear': '1976',
+                'endYear': '2005'
+            },
+            {
+                'projection': '2020s',
+                'startYear': '2010',
+                'endYear': '2039'
+            },
+            {
+                'projection': '2030s',
+                'startYear': '2020',
+                'endYear': '2049'
+            },
+            {
+                'projection': '2040s',
+                'startYear': '2030',
+                'endYear': '2059'
+            },
+            {
+                'projection': '2050s',
+                'startYear': '2040',
+                'endYear': '2069'
+            },
+            {
+                'projection': '2060s',
+                'startYear': '2050',
+                'endYear': '2079'
+            }
+        ]
+        for _projection in projections:
+            if _projection['projection'] == projection:
+                return {
+                    'startYear': _projection['startYear'],
+                    'endYear': _projection['endYear']
+                }
 
     """
     getDataPointTimeSeries
@@ -265,12 +324,88 @@ class Datasets():
                                 res['data'].append(_res)
                 return res
 
+    def getLayerOrPointAnomali(self, id, key, select, projection, latlng=None):
+        if latlng == None:
+            actual = self.getLayerOrPoint(id=id, key=key, select=select)
+            month = actual.coords[actual.coords.keys(
+            )[-1]].data.astype('datetime64[M]').astype(int) % 12 + 1
+            year = self.__getStartEndYear(projection=projection)
+            timeSel = pandas.date_range(start=(year['startYear'] + '-01'), end=(
+                year['endYear'] + '-12'), freq='AS').shift(30 * (month - 1) + 14, freq='D')
+            climatology = None
+            for dataset in Datasets.__datasets:
+                if dataset['id'] == id:
+                    datasel = dataset['dataset'][key]
+                    selectClimatology = select.copy()
+                    selectClimatology[datasel.dims[0]] = timeSel
+                    selectClimatology['method'] = 'nearest'
+                    climatology = datasel.sel(**selectClimatology).resample(
+                        '1MS', dim='time', how='mean').groupby('time.month').mean('time')[month - 1]
+            anomaly = actual - climatology
+            anomaly.attrs = actual.attrs
+            return anomaly
+        else:
+            actual = self.getLayerOrPoint(
+                id=id, key=key, select=select, latlng=latlng)
+            month = actual.coords[actual.coords.keys(
+            )[-1]].data.astype('datetime64[M]').astype(int) % 12 + 1
+            year = self.__getStartEndYear(projection=projection)
+            timeSel = pandas.date_range(start=(year['startYear'] + '-01'), end=(
+                year['endYear'] + '-12'), freq='AS').shift(30 * (month - 1) + 14, freq='D')
+            climatology = None
+            for dataset in Datasets.__datasets:
+                if dataset['id'] == id:
+                    datasel = dataset['dataset'][key]
+                    selectClimatology = select.copy()
+                    selectClimatology[datasel.dims[0]] = timeSel
+                    selectClimatology[datasel.dims[-2]] = latlng['lat']
+                    selectClimatology[datasel.dims[-1]] = latlng['lng']
+                    selectClimatology['method'] = 'nearest'
+                    climatology = datasel.sel(**selectClimatology).resample(
+                        '1MS', dim='time', how='mean').groupby('time.month').mean('time')[month - 1]
+            anomaly = actual - climatology
+            anomaly.attrs = actual.attrs
+            return anomaly
+
+    def getLayerHeaderAnomali(self, id, key, select, projection):
+        res = {}
+        datasel = self.getLayerOrPointAnomali(
+            id=id, key=key, select=select, projection=projection)
+        lat = datasel[datasel.dims[-2]].data
+        minlat = numpy.amin(lat).item()
+        maxlat = numpy.amax(lat).item()
+        lon = datasel[datasel.dims[-1]].data
+        minlon = numpy.amin(lon).item()
+        maxlon = numpy.amax(lon).item()
+        res['bounds'] = [[minlat, minlon], [maxlat, maxlon]]
+        res['long_name'] = datasel.long_name
+        legend = self.__getLegend(datasel)
+        res['units'] = legend['units']
+        res['legends'] = legend['legends']
+        return res
+
+    def getDataPointTimeSeriesAnomali(self, id, key, select, latlng, projection):
+        actual = self.getDataPointTimeSeries(
+            id=id, key=key, select=select, latlng=latlng)
+        year = self.__getStartEndYear(projection=projection)
+        timeSel = pandas.date_range(
+            start=year['startYear'] + '-01', end=year['endYear'] + '-12', freq='MS').shift(14, freq='D')
+        climatology = None
+        for dataset in Datasets.__datasets:
+            if dataset['id'] == id:
+                datasel = dataset['dataset'][key]
+                selectClimatology = select.copy()
+                selectClimatology[datasel.dims[0]] = timeSel
+                selectClimatology['method'] = 'nearest'
+                climatology = datasel.sel(**selectClimatology).resample(
+                    '1MS', dim='time', how='mean').groupby('time.month').mean('time')
+        anomaly = actual.resample(time='1MS').mean(
+            actual.coords.keys()[-1]).groupby('time.month') - climatology
+        anomaly.attrs = actual.attrs
+        return anomaly
+
 
 datasets = Datasets()
-
-from flask import Flask, request, jsonify, send_file, json
-from flask_cors import CORS
-import plot
 
 
 app = Flask(__name__, static_url_path="", static_folder="static")
@@ -371,6 +506,56 @@ def getdatapointminormax():
     select = json.loads(request.args.get('select'))
     hasil = datasets.getDataPointMinOrMax(
         id=id, key=key, minormax=minormax, select=select)
+    return jsonify(hasil)
+
+
+@app.route('/api/getlayerheaderanomali')
+def getlayerheaderanomali():
+    id = int(request.args.get('id'))
+    key = request.args.get('key')
+    select = json.loads(request.args.get('select'))
+    projection = request.args.get('projection')
+    hasil = datasets.getLayerHeaderAnomali(
+        id=id, key=key, select=select, projection=projection)
+    return jsonify(hasil)
+
+
+@app.route('/api/getlayeranomali')
+def getlayeranomali():
+    id = int(request.args.get('id'))
+    key = request.args.get('key')
+    select = json.loads(request.args.get('select'))
+    projection = request.args.get('projection')
+    hasil = plot.toPngResponse(
+        datasets.getLayerOrPointAnomali(id=id, key=key, select=select, projection=projection))
+    return send_file(hasil, mimetype='image/png')
+
+
+@app.route('/api/getdatapointanomali')
+def getdatapointanomali():
+    id = int(request.args.get('id'))
+    key = request.args.get('key')
+    latlng = json.loads(request.args.get('latlng'))
+    latlng['lat'] = float(latlng['lat'])
+    latlng['lng'] = float(latlng['lng'])
+    select = json.loads(request.args.get('select'))
+    projection = request.args.get('projection')
+    hasil = datasets.getLayerOrPointAnomali(
+        id=id, key=key, select=select, latlng=latlng, projection=projection).to_dict()
+    return jsonify(hasil)
+
+
+@app.route('/api/getdatapointtimeseriesanomali')
+def getdatapointtimeseriesanomali():
+    id = int(request.args.get('id'))
+    key = request.args.get('key')
+    latlng = json.loads(request.args.get('latlng'))
+    latlng['lat'] = float(latlng['lat'])
+    latlng['lng'] = float(latlng['lng'])
+    select = json.loads(request.args.get('select'))
+    projection = request.args.get('projection')
+    hasil = datasets.getDataPointTimeSeriesAnomali(
+        id=id, key=key, select=select, latlng=latlng, projection=projection).to_dict()
     return jsonify(hasil)
 
 
