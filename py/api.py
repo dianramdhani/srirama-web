@@ -404,6 +404,43 @@ class Datasets():
         anomaly.attrs = actual.attrs
         return anomaly
 
+    def getLayerCroppedAnomali(self, id, key, select, bounds, projection):
+        for dataset in Datasets.__datasets:
+            if dataset['id'] == id:
+                datasel = dataset['dataset'][key]
+                lat1 = dataset['dataset'][datasel.dims[-2]
+                                          ].sel(**{datasel.dims[-2]: bounds['lat'][0], 'method': 'nearest'})
+                lat2 = dataset['dataset'][datasel.dims[-2]
+                                          ].sel(**{datasel.dims[-2]: bounds['lat'][1], 'method': 'nearest'})
+                lng1 = dataset['dataset'][datasel.dims[-1]
+                                          ].sel(**{datasel.dims[-1]: bounds['lng'][0], 'method': 'nearest'})
+                lng2 = dataset['dataset'][datasel.dims[-1]
+                                          ].sel(**{datasel.dims[-1]: bounds['lng'][1], 'method': 'nearest'})
+                select[datasel.dims[-2]
+                       ] = dataset['dataset'][datasel.dims[-2]].loc[lat1: lat2]
+                select[datasel.dims[-1]
+                       ] = dataset['dataset'][datasel.dims[-1]].loc[lng1: lng2]
+                anomaly = self.getLayerOrPointAnomali(
+                    id=id, key=key, select=select, projection=projection)
+                return anomaly
+
+    def getLayerHeaderCroppedAnomali(self, id, key, select, bounds, projection):
+        res = {}
+        datasel = self.getLayerCroppedAnomali(
+            id=id, key=key, select=select, bounds=bounds, projection=projection)
+        lat = datasel[datasel.dims[-2]].data
+        minlat = numpy.amin(lat).item()
+        maxlat = numpy.amax(lat).item()
+        lon = datasel[datasel.dims[-1]].data
+        minlon = numpy.amin(lon).item()
+        maxlon = numpy.amax(lon).item()
+        res['bounds'] = [[minlat, minlon], [maxlat, maxlon]]
+        res['long_name'] = datasel.long_name
+        legend = self.__getLegend(datasel)
+        res['units'] = legend['units']
+        res['legends'] = legend['legends']
+        return res
+
 
 datasets = Datasets()
 
@@ -557,6 +594,30 @@ def getdatapointtimeseriesanomali():
     hasil = datasets.getDataPointTimeSeriesAnomali(
         id=id, key=key, select=select, latlng=latlng, projection=projection).to_dict()
     return jsonify(hasil)
+
+
+@app.route('/api/getlayerheadercroppedanomali')
+def getlayerheadercroppedanomali():
+    id = int(request.args.get('id'))
+    key = request.args.get('key')
+    select = json.loads(request.args.get('select'))
+    bounds = json.loads(request.args.get('bounds'))
+    projection = request.args.get('projection')
+    hasil = datasets.getLayerHeaderCroppedAnomali(
+        id=id, key=key, select=select, bounds=bounds, projection=projection)
+    return jsonify(hasil)
+
+
+@app.route('/api/getlayercroppedanomali')
+def getlayercroppedanomali():
+    id = int(request.args.get('id'))
+    key = request.args.get('key')
+    select = json.loads(request.args.get('select'))
+    bounds = json.loads(request.args.get('bounds'))
+    projection = request.args.get('projection')
+    hasil = plot.toPngResponse(datasets.getLayerCroppedAnomali(
+        id=id, key=key, select=select, bounds=bounds, projection=projection))
+    return send_file(hasil, mimetype='image/png')
 
 
 app.run(host='0.0.0.0', port=8080, debug=True)

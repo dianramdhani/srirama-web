@@ -84,7 +84,13 @@ angular.module('srirama')
                         this.map.imageOverlay.setUrl('');
                         this.map.bounds = L.latLngBounds(res.bounds);
                         this.map.imageOverlay.setBounds(this.map.bounds);
-                        this.map.imageOverlay.setUrl(`${this.api.urlServer}/api/getlayercropped?id=${this.api.id}&key=${this.api.key}&select=${JSON.stringify(this.dimSelected)}&bounds=${JSON.stringify(bounds)}`);
+
+                        if (this.api.process === 'plot') {
+                            this.map.imageOverlay.setUrl(`${this.api.urlServer}/api/getlayercropped?id=${this.api.id}&key=${this.api.key}&select=${JSON.stringify(this.dimSelected)}&bounds=${JSON.stringify(bounds)}`);
+                        }
+                        if (this.api.process === 'anomali') {
+                            this.map.imageOverlay.setUrl(`${this.api.urlServer}/api/getlayercroppedanomali?id=${this.api.id}&key=${this.api.key}&select=${JSON.stringify(this.dimSelected.select)}&bounds=${JSON.stringify(bounds)}&projection=${this.dimSelected.projection}`);
+                        }
 
                         this.legend = {
                             legendText: res.legends,

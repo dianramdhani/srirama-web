@@ -229,23 +229,46 @@ angular.module('srirama')
          * @returns {Promise}
          */
         getLayerHeaderCropped(select, bounds) {
-            var q = this.q.defer();
-            this.http({
-                'url': `${this.urlServer}/api/getlayerheadercropped`,
-                'method': 'GET',
-                'params': {
-                    'id': this.id,
-                    'key': this.key,
-                    'select': JSON.stringify(select),
-                    'bounds': JSON.stringify(bounds),
-                }
-            })
-                .then((res) => {
-                    res = res.data;
-                    this.layerHeader = res;
-                    q.resolve(res);
+            if (this.process === 'plot') {
+                var q = this.q.defer();
+                this.http({
+                    url: `${this.urlServer}/api/getlayerheadercropped`,
+                    method: 'GET',
+                    params: {
+                        id: this.id,
+                        key: this.key,
+                        select: JSON.stringify(select),
+                        bounds: JSON.stringify(bounds),
+                    }
                 })
-            return q.promise;
+                    .then((res) => {
+                        res = res.data;
+                        this.layerHeader = res;
+                        q.resolve(res);
+                    })
+                return q.promise;
+            }
+            if (this.process === 'anomali') {
+                console.log('getLayerHeaderCropped anomali', select)
+                var q = this.q.defer();
+                this.http({
+                    url: `${this.urlServer}/api/getlayerheadercroppedanomali`,
+                    method: 'GET',
+                    params: {
+                        id: this.id,
+                        key: this.key,
+                        select: JSON.stringify(select.select),
+                        bounds: JSON.stringify(bounds),
+                        projection: select.projection
+                    }
+                })
+                    .then((res) => {
+                        res = res.data;
+                        this.layerHeader = res;
+                        q.resolve(res);
+                    })
+                return q.promise;
+            }
         }
 
         /**
