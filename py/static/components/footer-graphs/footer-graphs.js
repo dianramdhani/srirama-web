@@ -1,3 +1,5 @@
+var ss = require('simple-statistics');
+
 angular.module('srirama')
     .component('footerGraphs', {
         bindings: {
@@ -157,6 +159,11 @@ angular.module('srirama')
                             dataArr.push([(new Date(times[i])).getTime(), data[i]]);    //.push(xArr, yArr)
                         }
 
+                        var regArr = [], linearRegression = ss.linearRegression(dataArr);
+                        dataArr.forEach(element => {
+                            regArr.push([element[0], ss.linearRegressionLine(linearRegression)(element[0])]);
+                        });
+
                         var graph = Highcharts.stockChart(divId, {
                             rangeSelector: {
                                 buttons: [{
@@ -191,15 +198,26 @@ angular.module('srirama')
                             yAxis: {
                                 opposite: false
                             },
+                            legend: {
+                                enabled: true,
+                            },
                             tooltip: {
                                 formatter: function () {
                                     return Highcharts.dateFormat('%Y %b', new Date(this.x)) +
                                         `<br><b>${this.y}</b>`;
                                 }
                             },
-                            series: [{
-                                data: dataArr
-                            }]
+                            series: [
+                                {
+                                    name: res.attrs.long_name,
+                                    data: dataArr
+                                },
+                                {
+                                    name: 'Regression Linear',
+                                    data: regArr,
+                                    color: 'rgba(223, 83, 83, .9)'
+                                }
+                            ]
                         });
 
                         if (document.getElementById(divId)) {
@@ -249,6 +267,11 @@ angular.module('srirama')
                             dataArr.push([(new Date(times[i])).getTime(), data[i]]);    //.push(xArr, yArr)
                         }
 
+                        var regArr = [], linearRegression = ss.linearRegression(dataArr);
+                        dataArr.forEach(element => {
+                            regArr.push([element[0], ss.linearRegressionLine(linearRegression)(element[0])]);
+                        });
+
                         var graph = Highcharts.stockChart(divId, {
                             rangeSelector: {
                                 buttons: [{
@@ -283,15 +306,26 @@ angular.module('srirama')
                             yAxis: {
                                 opposite: false
                             },
+                            legend: {
+                                enabled: true,
+                            },
                             tooltip: {
                                 formatter: function () {
                                     return Highcharts.dateFormat('%Y %b', new Date(this.x)) +
                                         `<br><b>${this.y}</b>`;
                                 }
                             },
-                            series: [{
-                                data: dataArr
-                            }]
+                            series: [
+                                {
+                                    name: res.attrs.long_name,
+                                    data: dataArr
+                                },
+                                {
+                                    name: 'Regression Linear',
+                                    data: regArr,
+                                    color: 'rgba(223, 83, 83, .9)'
+                                }
+                            ]
                         });
 
                         if (document.getElementById(divId)) {

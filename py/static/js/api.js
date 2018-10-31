@@ -73,7 +73,6 @@ angular.module('srirama')
             }
 
             if (this.process === 'anomali') {
-                console.log(select);
                 var q = this.q.defer();
                 this.http({
                     url: `${this.urlServer}/api/getdatapointtimeseriesanomali`,
