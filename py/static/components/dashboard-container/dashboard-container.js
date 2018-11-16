@@ -24,13 +24,13 @@ angular.module('srirama')
                         id: 0,
                         key: 'rnet',
                         select: {},
-                        info: 'rnet adalah ...'
+                        info: 'Net radiation adalah radiasi yang diserap bumi.'
                     },
                     {
                         id: 0,
                         key: 'alb_ave',
                         select: {},
-                        info: 'alb_ave adalah ...'
+                        info: 'Avg albedo adalah rata-rata pantulan permukaan.'
                     },
                     {
                         id: 0,
@@ -42,43 +42,43 @@ angular.module('srirama')
                         id: 0,
                         key: 'd10',
                         select: {},
-                        info: 'd10 adalah ...'
+                        info: '10m wind direction adalah arah angin pada ketinggian 10m.'
                     },
                     {
                         id: 0,
                         key: 'cld',
                         select: {},
-                        info: 'cld adalah ...'
+                        info: 'Total cloud ave adalah rata-rata total fraksi awan.'
                     },
                     {
                         id: 0,
                         key: 'convh_ave',
                         select: { lev: 200 },
-                        info: 'convh_ave adalah ...'
+                        info: 'Covective heating adalah panas yang menyebabkan konveksi per hari.'
                     },
                     {
                         id: 0,
                         key: 'hfls',
                         select: {},
-                        info: 'hfls adalah ...'
+                        info: 'Avg latent heat flux adalah rata-rata flux panas laten.'
                     },
                     {
                         id: 0,
                         key: 'hfss',
                         select: {},
-                        info: 'hfss adalah ...'
+                        info: 'Avg sensible heat flux adalah rata-rata flux panas sensible.'
                     },
                     {
                         id: 0,
                         key: 'mrros',
                         select: {},
-                        info: 'mrros adalah ...'
+                        info: 'Runoff adalah aliran air permukaan yang dihasilkan oleh hujan yang tidak terserap oleh tanah.'
                     },
                     {
                         id: 0,
                         key: 'pmsl_ave',
                         select: {},
-                        info: 'pmsl_ave adalah ...'
+                        info: 'Avg mean sea level pressure adalah tekanan rata-rata permukaan laut.'
                     },
                     {
                         id: 0,
@@ -90,13 +90,13 @@ angular.module('srirama')
                         id: 0,
                         key: 'dustwd_ave',
                         select: {},
-                        info: 'dustwd_ave adalah ...'
+                        info: 'Dust wet deposition adalah endapan debu basah.'
                     },
                     {
                         id: 0,
                         key: 'dustdd_ave',
                         select: {},
-                        info: 'dustdd_ave adalah ...'
+                        info: 'Dust dry deposition adalah endapan debu kering.'
                     },
                     {
                         id: 0,
